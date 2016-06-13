@@ -1,23 +1,20 @@
 <head>
-  <title>5 Min 2 Home - find new place in city</title>
+
+    <title>5 Min 2 Home - find new place in city</title>
  
-
     <link rel="stylesheet" href="/css/main.css">
+
     <script type="text/javascript" src="/js/mapbox.js"></script>
-      
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
     <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
-
-    <script type="text/javascript">
-        
-    </script>
 
 </head>
 
 <body>
-    <div id='map'></div>
-    <input id='search' class='search-ui' placeholder='Enter state code' style="display: none;" />
+
+<div id='map'></div>
+    
+<input id='search' class='search-ui' placeholder='Enter state code' style="display: none;" />
 
 <div class="form1_out">
     <a href="#" id="geolocate" class="ui-button" style="
@@ -35,9 +32,12 @@
     "><img src="http://www.libraires-rhonealpes.fr/templates/lira-v1/img/customMarker.png" height="20" data-pin-nopin="true"></a>
 	<form action="" method="POST" class="form1">
 	    <div>
-		<div style="background: #4CAF50;
+		<div style="
+    background: #4CAF50;
     border: 0;
-    padding: 10px 15px;    color: white;float: left;">Откуда:</div>
+    padding: 10px 15px;    
+    color: white;float: 
+    left;">Откуда:</div>
 		<input type="text" name="from1" class="from1" id="from_field" placeholder="Ваш адрес"/>
 		<label><input type="checkbox" name="komnata" /><span>Комната</span></label>
 		<label><input type="checkbox" name="komnata1" /><span>1</span></label>
@@ -48,9 +48,12 @@
 		<div style="clear: both;"></div>
 		</div>
 	    <div style="margin: 10px 0 0;">
-		<div style="background: #8686FF;
+		<div style="
+    background: #8686FF;
     border: 0;
-    padding: 10px 22px;    color: white;float: left;">Куда:</div>
+    padding: 10px 22px;    
+    color: white;
+    float: left;">Куда:</div>
 		<input type="text" name="from1" class="from1" id="to_field" placeholder="Желаемый адрес" />
 		<label><input type="checkbox" name="komnata" /><span>Комната</span></label>
 		<label><input type="checkbox" name="komnata1" /><span>1</span></label>
@@ -73,40 +76,58 @@
 	
 </div>
 
-
-<div id="images" style="position: absolute">
-  </div>
-
-
-<style>
-#cat {
-        position: absolute;
-    z-index: 12;
-    bottom: -286px;
-}
-</style>
-
 <script>
 
-    //L.mapbox.accessToken = 'pk.eyJ1IjoicnVzdGVtcSIsImEiOiI2NDc5MzI2ZTZmMjc3Y2Y4YzEyMWI1OTU1N2VkOWVmMyJ9.Dxt1NnthR_sYu8aOsR3NSg';
-    //var map = L.mapbox.map('map', 'mapbox.streets')
-        //.setView([55.74, 37.63], 11);
+    var map,
+        marker_dst,
+        marker_src,
+        lat_src,
+        lat_dst,
+        lng_src,
+        lng_dst;
+        
+    DG.then(function() {
 
-    var map;
+        var icon_src = DG.icon ({ iconUrl: '/img/home-from.png' }),
+            icon_dst = DG.icon ({ iconUrl: '/img/home-to.png' });
 
-        DG.then(function () {
-            map = DG.map('map', {
-                center: [55.75194599890442, 37.62044906616212],
-                zoom: 13
-            });
-            DG.marker([55.74, 37.575], {draggable: 'true'}).addTo(map);
-            DG.marker([55.74, 37.66], {draggable: 'true'}).addTo(map);
+        map = DG.map('map', {
+            center: [55.75194599890442, 37.62044906616212],
+            zoom: 13
         });
 
-    DG.then(function() {
+        marker_dst = DG.marker([55.74, 37.57], { draggable: 'true', icon: icon_dst }).addTo(map);
+        marker_src = DG.marker([55.74, 37.66], { draggable: 'true', icon: icon_src }).addTo(map);
+
         map.on('click', function(e) {
             console.log('Вы кликнули на карту, координаты :' + e.latlng.lat + ', ' + e.latlng.lng);
         });
+
+        marker_src.on('dragend', function (e) {
+            lat_src = e.target._latlng.lat.toFixed(3);
+            lng_src = e.target._latlng.lng.toFixed(3);
+            getGeo(lat_src, lng_dst, "from_field");
+        });
+
+        marker_dst.on('dragend', function (e) {
+            lat_dst = e.target._latlng.lat.toFixed(3);
+            lng_dst = e.target._latlng.lng.toFixed(3);
+            getGeo(lat_dst, lng_dst, "to_field");
+        });
+
+        document.getElementById("geolocate").onclick = function () { 
+            map.locate({setView: true, watch: true})
+                .on('locationfound', function(e) {
+                    //DG.marker([e.latitude, e.longitude]).addTo(map);  // Set a marker on the curren user position
+                    lng_src = e.longitude;
+                    lat_src = e.latitude;
+                    marker_src.setLatlng([lat_src,lng_src]);
+                })
+                .on('locationerror', function(e) {
+                    console.log(e);
+                    alert("Location access denied.");
+                });
+        };
     });    
     
 </script>
@@ -115,6 +136,6 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
-    <script type="text/javascript" src="/js/mapbox.js"></script>
+
 </body>
 
