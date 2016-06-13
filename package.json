@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Home searching web service",
   "main": "server.js",
-  "repository": "",
-  "author": "5min2home Team",
+  "repository": "https://Zmeu213@bitbucket.org/5min2hometeam/node.js.git",
+  "license": "UNLICENSED",
   "dependencies": {
     "async": "~0.2.8",
     "express": "~3.2.4",

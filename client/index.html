@@ -1,25 +1,23 @@
 <head>
-  <title>simple</title>
-  <script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
-  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
-  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
-  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet' />
-  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
-  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-heat/v0.1.3/leaflet-heat.js'></script>
-  <link rel="stylesheet" href="/css/main.css">
-  <script type="text/javascript" src="/js/mapbox.js"></script>
-  
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-  
+  <title>5 Min 2 Home - find new place in city</title>
+ 
+
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/js/mapbox.js"></script>
+      
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+    <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+
+    <script type="text/javascript">
+        
+    </script>
+
 </head>
 
 <body>
-    
-    <img src="http://www.i2symbol.com/css/chat/facebook/memes/hires/cat_overload_cat_meme.png" id="cat">
-    
-  <div id='map'></div>
-<input id='search' class='search-ui' placeholder='Enter state code' style="display: none;" />
+    <div id='map'></div>
+    <input id='search' class='search-ui' placeholder='Enter state code' style="display: none;" />
 
 <div class="form1_out">
     <a href="#" id="geolocate" class="ui-button" style="
@@ -90,121 +88,33 @@
 
 <script>
 
-    L.mapbox.accessToken = 'pk.eyJ1IjoicnVzdGVtcSIsImEiOiI2NDc5MzI2ZTZmMjc3Y2Y4YzEyMWI1OTU1N2VkOWVmMyJ9.Dxt1NnthR_sYu8aOsR3NSg';
-    var map = L.mapbox.map('map', 'mapbox.streets')
-        .setView([55.74, 37.63], 11);
-        
-    var myLayer = L.mapbox.featureLayer().addTo(map);
-    var featureLayer = L.mapbox.featureLayer().addTo(map);
-    var featureLayer2 = L.mapbox.featureLayer().addTo(map);
-    var user_src;
-    var user_dst;
-    
-    if (!navigator.geolocation) {
-        geolocate.innerHTML = 'Geolocation is not available';
-    } else {
-        geolocate.onclick = function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            map.locate();
-        };
-    }
-    
-    //--------
-    
-    var csvLayer = omnivore.csv('airports.csv', null, L.mapbox.featureLayer().on('ready', function(e) {
-        // The clusterGroup gets each marker in the group added to it
-        // once loaded, and then is added to the map
-        var clusterGroup = new L.MarkerClusterGroup();
-        e.target.eachLayer(function(layer) {
-            clusterGroup.addLayer(layer);
+    //L.mapbox.accessToken = 'pk.eyJ1IjoicnVzdGVtcSIsImEiOiI2NDc5MzI2ZTZmMjc3Y2Y4YzEyMWI1OTU1N2VkOWVmMyJ9.Dxt1NnthR_sYu8aOsR3NSg';
+    //var map = L.mapbox.map('map', 'mapbox.streets')
+        //.setView([55.74, 37.63], 11);
+
+    var map;
+
+        DG.then(function () {
+            map = DG.map('map', {
+                center: [55.75194599890442, 37.62044906616212],
+                zoom: 13
+            });
+            DG.marker([55.74, 37.575], {draggable: 'true'}).addTo(map);
+            DG.marker([55.74, 37.66], {draggable: 'true'}).addTo(map);
         });
-        map.addLayer(clusterGroup);
-    }));
-    
-    
-    var csvLayer1 = omnivore.csv('workout.csv', null, L.mapbox.featureLayer().on('ready', function(e) {
-        
-        
-        // The clusterGroup gets each marker in the group added to it
-        // once loaded, and then is added to the map
-        var clusterGroup = new L.MarkerClusterGroup();
-        e.target.eachLayer(function(layer) {
-            clusterGroup.addLayer(layer);
+
+    DG.then(function() {
+        map.on('click', function(e) {
+            console.log('Вы кликнули на карту, координаты :' + e.latlng.lat + ', ' + e.latlng.lng);
         });
-        map.addLayer(clusterGroup);
-    }));
+    });    
     
-    //-----------
-    
-    var marker_source = L.marker(new L.LatLng(55.74, 37.575), {
-        icon: L.mapbox.marker.icon({
-            'marker-color': '4CAF50',
-                "marker-size" : "large"
-        }),
-        draggable: true,
-        title: 'Hi'
-        });
-        marker_source.bindPopup('This marker is draggable! Move it around.');
-        marker_source.addTo(map);
-        
-    var marker_destination = L.marker(new L.LatLng(55.74, 37.66), {
-            icon: L.mapbox.marker.icon({
-                'marker-color': '8888ff',
-                "marker-size" : "large"
-            }),
-            draggable: true
-        });
-        marker_destination.bindPopup('This marker is draggable! Move it around.');
-        marker_destination.addTo(map);
-    
-    map.on('locationfound', function(e) {
-        //map.fitBounds(e.bounds);
-        
-        user_src = e.latlng;
-    
-        marker_source.setLatLng(user_src);
-    
-        // And hide the geolocation button
-        //geolocate.parentNode.removeChild(geolocate);
-    });
-    
-    function locFound(e){
-        
-    }
-    
-    map.on('mouseup', function(e) {
-        user_src = marker_source.getLatLng();
-        user_dst = marker_destination.getLatLng();
-        javascript: console.log(user_src, ' ', user_dst);
-        getGeo(user_src.lat, user_src.lng, "from_field");
-        getGeo(user_dst.lat, user_dst.lng, "to_field");
-    })
-    
-    
-    function search() {
-        // get the value of the search input field
-        var searchString = $('#search').val().toLowerCase();
-    
-        csvLayer.setFilter(showState);
-    
-        // here we're simply comparing the 'state' property of each marker
-        // to the search string, seeing whether the former contains the latter.
-        function showState(feature) {
-            return feature.properties.state
-                .toLowerCase()
-                .indexOf(searchString) !== -1;
-        }
-    }
-    
-    $("label span").click(function () {
-        $(this).toggleClass("active");
-    });
 </script>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
+    <script type="text/javascript" src="/js/mapbox.js"></script>
 </body>
 
