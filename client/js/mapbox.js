@@ -65,7 +65,11 @@ function IDGenerator() {
   }
 };
 
-function api_select() {
+function returnData(data){
+    return data;
+}
+
+function api_select( callback ) {
   var result;
   var api = "http://localhost:8081/api/select";
   $.getJSON(api)
@@ -73,7 +77,7 @@ function api_select() {
     console.log(JSON.stringify(data));
     result = data;
     console.log("RESULT: " + result[0])
-    return result[0];
+    callback(returnData(result));
   })
   
 };
@@ -99,7 +103,16 @@ function api_search_in_radius(lng, lat, rad) {
   });
 };
 
-function maps_view(DG) {
-  var mat = api_select();
-  console.log("MY MAT: " + mat);
+function maps_view(DG, map, callback) {
+  var stack = [];
+  api_select(function (q) {
+    console.log(map)
+    for (var i = 0; i < q.length; i++) {
+      console.log(JSON.stringify(q[i].src_point.x) + " " + JSON.stringify(q[i].src_point.y))
+      stack.push([q[i].src_point.x, q[i].src_point.y]);
+    }
+    console.log(stack)
+    callback(returnData(stack))
+  })
+  //console.log("MY MAT: " + mat.select());
 };

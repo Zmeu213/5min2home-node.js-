@@ -147,7 +147,12 @@
             //api_select("btn_a");
             //api_insert(lng_src, lat_src, lng_dst, lat_dst);
             //api_search_in_radius(lng_src, lat_src, 0.01);
-            maps_view(DG);
+            var all_markers = []
+            maps_view(DG, map, function(q) {
+                for (var i = 0; i < q.length; i++) {
+                    DG.marker([q[i][1], q[i][0]]).addTo(map);
+                }
+            });
         };
         
     });    
