@@ -77,6 +77,18 @@
 	
 </div>
 
+<div style="
+    position: absolute;
+    left: 5px;
+    top: 100px;
+    display: table;
+    background: lightseagreen;
+    width: 40px;
+    padding: 11px 0px 6px 1px;
+    " id="btn_a">
+    <p>Text</p>
+</div>
+
 <script>
 
     var map,
@@ -105,14 +117,14 @@
         });
 
         marker_src.on('dragend', function (e) {
-            lat_src = e.target._latlng.lat.toFixed(3);
-            lng_src = e.target._latlng.lng.toFixed(3);
+            lat_src = e.target._latlng.lat.toFixed(5);
+            lng_src = e.target._latlng.lng.toFixed(5);
             getGeo(lat_src, lng_dst, "from_field");
         });
 
         marker_dst.on('dragend', function (e) {
-            lat_dst = e.target._latlng.lat.toFixed(3);
-            lng_dst = e.target._latlng.lng.toFixed(3);
+            lat_dst = e.target._latlng.lat.toFixed(5);
+            lng_dst = e.target._latlng.lng.toFixed(5);
             getGeo(lat_dst, lng_dst, "to_field");
         });
 
@@ -129,16 +141,15 @@
                     alert("Location access denied.");
                 });
         };
-        document.getElementById("big_button").onclick = function () {
-            showAlert();
-            do_it();
+        document.getElementById("btn_a").onclick = function () {
+            var generator = new IDGenerator();
+            //console.log("ID: " + generator.generate());
+            //api_select("btn_a");
+            //api_insert(lng_src, lat_src, lng_dst, lat_dst);
+            //api_search_in_radius(lng_src, lat_src, 0.01);
+            maps_view(DG);
         };
         
-        alert("invoke /apartments/default")
-        $.get( "apartments/default", function( data ) {
-          console.log("data", data)
-          alert( "Load was performed." );
-        });
     });    
     
 </script>

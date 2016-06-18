@@ -32,11 +32,12 @@ router.use(express.static(path.resolve(__dirname, 'client')));
 var messages = [];
 var sockets = [];
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+server.listen(process.env.PORT || 8080, process.env.IP || "0.0.0.0", function(){
   var addr = server.address();
   console.log("5min2home server listening at", addr.address + ":" + addr.port);
 });
 
+//QUERY FUNCTIONS
 
 function custom_insert (f, src_lng, src_lat, dst_lng, dst_lat, user_id) {
     // Copy paramters into query string und create new pg.client.query
@@ -82,11 +83,6 @@ function custom_select2(f, lng, lat, rad) {
     });
 }
 
-function get_default_apartments(f) {
-    console.log("Appartments called");
-    
-}
-
 //REST API 
 
 var restify = require('restify');
@@ -96,15 +92,17 @@ function respond(req, res, next) {
     next();
 };
 
-function respond_select(req,res, next) {
+function respond_select(req, res, next) {
     custom_select1((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
         res.send(t);
         next();
     })
 };
 
-function respond_select_params(req,res, next) {
+function respond_select_params(req, res, next) {
     custom_select2((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
         res.send(t);
         next();
     }, req.params.lat, req.params.lng, req.params.rad);
@@ -113,6 +111,7 @@ function respond_select_params(req,res, next) {
 
 function respond_insert(req,res, next) {
     custom_insert((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
         res.send(t);
         next();
     }, req.params.src_lng, req.params.src_lat, req.params.dst_lng, req.params.dst_lat, req.params.user_id);
@@ -123,7 +122,7 @@ server_api.get('/hello/:name', respond);
 server_api.head('/hello/:name', respond);
 
 server_api.get('/api/select', respond_select);
-server_api.get('/api/select/:lat/:lng/:rad', respond_select_params);
+server_api.get('/api/select/:lng/:lat/:rad', respond_select_params);
 server_api.get('/api/insert/:src_lng/:src_lat/:dst_lng/:dst_lat/:user_id', respond_insert);
 
 server_api.listen(8081, function() {

@@ -29,7 +29,8 @@ function getGeo(lat, lng, id, api){
   var field = $( full_id)
   $.getJSON(api, {
     latlng: lat + ',' + lng,
-    key: key
+    key: key,
+    language: "ru"
  })
  .done(function( data ) {
    $.each( data.results, function( i, result ){
@@ -42,3 +43,63 @@ function getGeo(lat, lng, id, api){
    })
  })
 }
+
+function IDGenerator() {
+  this.length = 15;
+  this.timestamp = +new Date;
+     
+  var _getRandomInt = function( min, max ) {
+    return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+  }
+     
+  this.generate = function() {
+    var ts = this.timestamp.toString();
+    var parts = ts.split( "" ).reverse();
+    var id = "";
+       
+    for( var i = 0; i < this.length; ++i ) {
+      var index = _getRandomInt( 0, parts.length - 1 );
+      id += parts[index];  
+    }
+    return id;
+  }
+};
+
+function api_select() {
+  var result;
+  var api = "http://localhost:8081/api/select";
+  $.getJSON(api)
+  .done(function( data ) {
+    console.log(JSON.stringify(data));
+    result = data;
+    console.log("RESULT: " + result[0])
+    return result[0];
+  })
+  
+};
+
+function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
+  var generator = new IDGenerator;
+  var api = "http://localhost:8081/api/insert/" + 
+            src_lng + "/" + src_lat + "/" + 
+            dst_lng + "/" + dst_lat + "/" + 
+            generator.generate() ;
+  $.getJSON(api)
+  .done(function( data ) {
+    console.log(data)
+  })
+};
+
+function api_search_in_radius(lng, lat, rad) {
+  var api = "http://localhost:8081/api/select/" + 
+            lng + "/" + lat + "/" + rad;
+  $.getJSON(api)
+  .done(function( data ) {
+    console.log(data)
+  });
+};
+
+function maps_view(DG) {
+  var mat = api_select();
+  console.log("MY MAT: " + mat);
+};
