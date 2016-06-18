@@ -38,18 +38,27 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
 });
 
 
-function custom_insert (src_lng, src_lat, dst_lng, dst_lat, user_id) {
+function custom_insert (f, src_lng, src_lat, dst_lng, dst_lat, user_id) {
     // Copy paramters into query string und create new pg.client.query
-    console.log("fine\n");
-    var func_query = client.query("INSERT INTO test_from_to VALUES ( point(" + 
-        src_lng + ", " + src_lat + "), point(" + dst_lng + ", " + dst_lat + "), " + user_id + ");");
-    func_query.on('row', function(row) {
-        console.log(row);
+
+    var client = new pg.Client(conString);
+    client.connect();
+    console.log("INSERT with params was called with query");
+    console.log("INSERT INTO test_from_to VALUES ( point(" + src_lng + ", " + src_lat + 
+        "), point(" + dst_lng + ", " + dst_lat + "), " + user_id + ");");
+    var func_query = client.query("INSERT INTO test_from_to VALUES ( point(" + src_lng + ", " + src_lat + 
+        "), point(" + dst_lng + ", " + dst_lat + "), " + user_id + ");", function(err, result) {
+        console.log("Error: " + err);
+        if(!err) 
+            var status = {"satus": "succes"}
+        else
+            var status = {"satus": "fail"};
+        f(status)
+        client.end();
     });
-    func_query.on('end', client.end.bind(client));
 };
 
-function custom_select(f){
+function custom_select1(f){
     var client = new pg.Client(conString);
     client.connect();
     console.log("SELECT * was called");
@@ -58,23 +67,19 @@ function custom_select(f){
         f(result.rows)
         client.end();
     });
-    var rows = [];
-    return rows;
 };
 
-function custom_select(f, lng, lat, rad) {
+function custom_select2(f, lng, lat, rad) {
     var client = new pg.Client(conString);
     client.connect();
-    console.log("SELECT with params was called");
-    var func_query = client.query("SELECT * FROM test_from_to WHERE (src_lat - " + lat + ") * (src_lat - " + lat + 
-        ") - (src_lng - " + lng + ") * (src_lng - " + lng + " ) < " + rad * rad + " ;", 
-    function(err, result) {
-        console.log(result);
+    console.log("SELECT with params was called with query");
+    console.log("SELECT src_point FROM test_from_to WHERE (src_point <@ circle (("+lng+", "+lat+"),"+rad+");");
+    var func_query = client.query("SELECT src_point FROM test_from_to WHERE src_point <@ circle '(("+
+                                    lng+", "+lat+"),"+rad+")';", function(err, result) {
+        console.log("Error: " + err);
         f(result.rows)
         client.end();
     });
-    var rows = [];
-    return rows;
 }
 
 function get_default_apartments(f) {
@@ -92,26 +97,35 @@ function respond(req, res, next) {
 };
 
 function respond_select(req,res, next) {
-    custom_select((t) => {
+    custom_select1((t) => {
         res.send(t);
         next();
     })
 };
 
-function default_apartments(req, res, next){
-    get_default_apartments((r) => {
-        res.send(r);
+function respond_select_params(req,res, next) {
+    custom_select2((t) => {
+        res.send(t);
         next();
-    })
-}
+    }, req.params.lat, req.params.lng, req.params.rad);
+    console.log(req.params.lng, req.params.lat, req.params.rad);
+};
+
+function respond_insert(req,res, next) {
+    custom_insert((t) => {
+        res.send(t);
+        next();
+    }, req.params.src_lng, req.params.src_lat, req.params.dst_lng, req.params.dst_lat, req.params.user_id);
+};
 
 var server_api = restify.createServer();
 server_api.get('/hello/:name', respond);
 server_api.head('/hello/:name', respond);
 
-server_api.get('/select', respond_select);
-server_api.get('/select/:lat&:lng&:rad', respond_select);
-server_api.get('/apartments/default', default_apartments);
+server_api.get('/api/select', respond_select);
+server_api.get('/api/select/:lat/:lng/:rad', respond_select_params);
+server_api.get('/api/insert/:src_lng/:src_lat/:dst_lng/:dst_lat/:user_id', respond_insert);
+
 server_api.listen(8081, function() {
   console.log('%s listening at %s', server_api.name, server_api.url);
 });
