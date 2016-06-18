@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/main.css">
 
     <script type="text/javascript" src="/js/mapbox.js"></script>
+    <script type="text/javascript" src="/js/pg.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
 
@@ -62,7 +63,7 @@
 		<label><input type="checkbox" name="komnata4" /><span>4+</span></label>
 		<input type="text" name="to1" placeholder="Ваша желаемая арендная плата" />
 		</div>
-		<input type="submit" value="Переехать" style="float: right;
+		<input type="submit" id="big_button" value="Переехать" style="float: right;
     margin: 10px 0 0;
     padding: 10px;
     color: white;
@@ -115,7 +116,7 @@
             getGeo(lat_dst, lng_dst, "to_field");
         });
 
-        document.getElementById("geolocate").onclick = function () { 
+        document.getElementById("big_button").onclick = function () { 
             map.locate({setView: true, watch: true})
                 .on('locationfound', function(e) {
                     //DG.marker([e.latitude, e.longitude]).addTo(map);  // Set a marker on the curren user position
@@ -128,6 +129,10 @@
                     alert("Location access denied.");
                 });
         };
+        document.getElementById("geolocate").onclick = function () {
+            showAlert();
+            do_it();
+        }; 
     });    
     
 </script>
