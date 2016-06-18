@@ -71,7 +71,7 @@ function returnData(data){
 
 function api_select( callback ) {
   var result;
-  var api = "http://localhost:8081/api/select";
+  var api = "https://node-hackerman.c9users.io:8081/api/select";
   $.getJSON(api)
   .done(function( data ) {
     console.log(JSON.stringify(data));
@@ -84,7 +84,7 @@ function api_select( callback ) {
 
 function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
   var generator = new IDGenerator;
-  var api = "http://localhost:8081/api/insert/" + 
+  var api = "https://node-hackerman.c9users.io:8081/api/insert/" + 
             src_lng + "/" + src_lat + "/" + 
             dst_lng + "/" + dst_lat + "/" + 
             generator.generate() ;
@@ -95,7 +95,7 @@ function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
 };
 
 function api_search_in_radius(lng, lat, rad) {
-  var api = "http://localhost:8081/api/select/" + 
+  var api = "https://node-hackerman.c9users.io:8081/api/select/" + 
             lng + "/" + lat + "/" + rad;
   $.getJSON(api)
   .done(function( data ) {
@@ -108,8 +108,8 @@ function maps_view(DG, map, callback) {
   api_select(function (q) {
     console.log(map)
     for (var i = 0; i < q.length; i++) {
-      console.log(JSON.stringify(q[i].src_point.x) + " " + JSON.stringify(q[i].src_point.y))
-      stack.push([q[i].src_point.x, q[i].src_point.y]);
+      console.log(JSON.stringify(q[i].src.x) + " " + JSON.stringify(q[i].src.y))
+      stack.push([q[i].src.x, q[i].src.y]);
     }
     console.log(stack)
     callback(returnData(stack))

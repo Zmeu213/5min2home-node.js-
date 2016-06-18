@@ -11,7 +11,7 @@ var socketio = require('socket.io');
 var express = require('express');
 
 var pg = require('pg');
-var conString = "postgres://app_rw:samplepass@localhost/testdb";
+var conString = "postgres://app_rw:samplepass@localhost/prod";
 
 //this initializes a connection pool
 //it will keep idle connections open for a (configurable) 30 seconds
@@ -45,10 +45,10 @@ function custom_insert (f, src_lng, src_lat, dst_lng, dst_lat, user_id) {
     var client = new pg.Client(conString);
     client.connect();
     console.log("INSERT with params was called with query");
-    console.log("INSERT INTO test_from_to VALUES ( point(" + src_lng + ", " + src_lat + 
-        "), point(" + dst_lng + ", " + dst_lat + "), " + user_id + ");");
-    var func_query = client.query("INSERT INTO test_from_to VALUES ( point(" + src_lng + ", " + src_lat + 
-        "), point(" + dst_lng + ", " + dst_lat + "), " + user_id + ");", function(err, result) {
+    console.log("INSERT INTO orders VALUES (" + user_id + ", point(" + src_lng + ", " + src_lat + 
+        "), point(" + dst_lng + ", " + dst_lat + ") );");
+    var func_query = client.query("INSERT INTO orders VALUES ( " + user_id + ", point(" + src_lng + ", " + src_lat + 
+        "), point(" + dst_lng + ", " + dst_lat + ") );", function(err, result) {
         console.log("Error: " + err);
         if(!err) 
             var status = {"satus": "succes"}
@@ -63,7 +63,7 @@ function custom_select1(f){
     var client = new pg.Client(conString);
     client.connect();
     console.log("SELECT * was called");
-    var func_query = client.query("SELECT * FROM test_from_to;", function(err, result) {
+    var func_query = client.query("SELECT * FROM orders;", function(err, result) {
         console.log(result);
         f(result.rows)
         client.end();
@@ -74,8 +74,8 @@ function custom_select2(f, lng, lat, rad) {
     var client = new pg.Client(conString);
     client.connect();
     console.log("SELECT with params was called with query");
-    console.log("SELECT src_point FROM test_from_to WHERE (src_point <@ circle (("+lng+", "+lat+"),"+rad+");");
-    var func_query = client.query("SELECT src_point FROM test_from_to WHERE src_point <@ circle '(("+
+    console.log("SELECT src_point FROM order WHERE (src_point <@ circle (("+lng+", "+lat+"),"+rad+");");
+    var func_query = client.query("SELECT src_point FROM order WHERE src_point <@ circle '(("+
                                     lng+", "+lat+"),"+rad+")';", function(err, result) {
         console.log("Error: " + err);
         f(result.rows)
