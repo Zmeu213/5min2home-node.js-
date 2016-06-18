@@ -9,7 +9,8 @@
     "async": "~0.2.8",
     "express": "~3.2.4",
     "socket.io": "~0.9.14",
-    "pg": "5.0.0"
+    "pg": "~5.0.x",
+    "restify": "~4.1.1"
   },
   "scripts": {
     "test": "node -v"

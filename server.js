@@ -77,6 +77,11 @@ function custom_select(f, lng, lat, rad) {
     return rows;
 }
 
+function get_default_apartments(f) {
+    console.log("Appartments called");
+    
+}
+
 //REST API 
 
 var restify = require('restify');
@@ -93,12 +98,20 @@ function respond_select(req,res, next) {
     })
 };
 
+function default_apartments(req, res, next){
+    get_default_apartments((r) => {
+        res.send(r);
+        next();
+    })
+}
+
 var server_api = restify.createServer();
 server_api.get('/hello/:name', respond);
 server_api.head('/hello/:name', respond);
 
 server_api.get('/select', respond_select);
 server_api.get('/select/:lat&:lng&:rad', respond_select);
-server_api.listen(8080, function() {
+server_api.get('/apartments/default', default_apartments);
+server_api.listen(8081, function() {
   console.log('%s listening at %s', server_api.name, server_api.url);
 });
