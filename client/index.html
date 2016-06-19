@@ -137,21 +137,22 @@
                     alert("Location access denied.");
                 });
         };
-        document.getElementById("btn_a").onclick = function () {
-            var generator = new IDGenerator();
-            //console.log("ID: " + generator.generate());
-            //api_select("btn_a");
-            //api_insert(lng_src, lat_src, lng_dst, lat_dst);
-            //api_search_in_radius(lng_src, lat_src, 0.01);
+        // ТАКОЙ КНОПКИ НЕТ, ПОЭТОМУ ЗАКОММЕНТИРОВАЛ
+        // document.getElementById("btn_a").onclick = function () {
+        //     var generator = new IDGenerator();
+        //     //console.log("ID: " + generator.generate());
+        //     //api_select("btn_a");
+        //     //api_insert(lng_src, lat_src, lng_dst, lat_dst);
+        //     //api_search_in_radius(lng_src, lat_src, 0.01);
             
-            var all_markers = []
-            maps_view(DG, map, function(q) {
-                for (var i = 0; i < q.length; i++) {
-                    DG.marker([q[i][1], q[i][0]]).addTo(map);
-                }
-            });
+        //     var all_markers = []
+        //     maps_view(DG, map, function(q) {
+        //         for (var i = 0; i < q.length; i++) {
+        //             DG.marker([q[i][1], q[i][0]]).addTo(map);
+        //         }
+        //     });
             
-        };
+        // };
         // swim
         swimmingIcon = DG.icon({ iconUrl: 'http://www.clker.com/cliparts/b/a/v/e/C/x/blue-swimmer-icon-hi.png', iconSize: [48, 48], iconAnchor: [24, 24] }); 
 
