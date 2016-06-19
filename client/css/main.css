@@ -87,7 +87,7 @@
   border: 5px solid #3d3d3d;
   text-decoration: none;
   width: 40px;
-  height: 40px;;
+  height: 40px;
   z-index: 2;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.4);
   align-items: center;
@@ -96,9 +96,18 @@
   right: 9px;
   background: white;;
   border-radius: 100%;
-  display: flex;;;
+  display: flex;
 }
 .schools img, .gyms img, .swimming-pools img { width:16px; display:block;
+}
+.schools:hover, .gyms:hover, .swimming-pools:hover {
+  background: #e6e6e6;
+}
+.schools.active:hover, .gyms.active:hover, .swimming-pools.active:hover {
+  background: white;
+};
+.schools {
+  top: 48px;
 }
 .swimming-pools {
   top: 87px;

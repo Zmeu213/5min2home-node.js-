@@ -7,7 +7,9 @@
     <script type="text/javascript" src="/js/mapbox.js"></script>
     <script type="text/javascript" src="/js/pg.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+    <!-- // <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script> -->
+    <script src="http://maps.api.2gis.ru/2.0/loader.js"></script>
+
 
 </head>
 
@@ -91,9 +93,12 @@
         lng_dst;
         
     DG.then(function() {
-
+        var map, point;
+        var latLng = [55.751288, 37.607741];
+        var swimmingIcon;
         var icon_src = DG.icon ({ iconUrl: '/img/home-from.png' }),
             icon_dst = DG.icon ({ iconUrl: '/img/home-to.png' });
+        var markers = DG.featureGroup();
 
         map = DG.map('map', {
             center: [55.75194599890442, 37.62044906616212],
@@ -147,10 +152,57 @@
             });
             
         };
+        // swim
+        swimmingIcon = DG.icon({ iconUrl: 'http://www.clker.com/cliparts/b/a/v/e/C/x/blue-swimmer-icon-hi.png', iconSize: [48, 48], iconAnchor: [24, 24] }); 
 
+        DG.ajax({
+            url: 'http://catalog.api.2gis.ru/geo/search',
+            data: {
+                key: 'ruxbrs7113',
+                version: 1.3,
+                'bound[point1]': '37.431,55.879',
+                'bound[point2]': '37.790,55.649',
+                q: 'бассейн',
+                limit: 1000
+            },
+            success: function(data) {
+                data.result.forEach(function(xxx) {
+                    // считываем строку в WKT-формате
+                    point = DG.Wkt.toPoints(xxx.centroid);
+
+                    // извлекаем координаты для маркера
+                    var lng = point[0];
+                    var lat = point[1];
+
+                    // создаем и добавляем маркер на карту
+                    marker = DG.marker([lat, lng], { icon: swimmingIcon });
+                    marker.bindPopup(xxx.name);
+                    marker.addTo(markers);
+                });
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        function showMarkers() {
+            markers.addTo(map);
+        };
+
+        function hideMarkers() {
+            markers.removeFrom(map);
+        };
+        var showSwimmingPools = false;
+        document.getElementById('swimming-pools').onclick = function(){
+            if (!showSwimmingPools) {
+                showMarkers();
+                showSwimmingPools = true;
+            } else {
+                hideMarkers();
+                showSwimmingPools = false;
+            }
+        };
 
     });    
-    
 </script>
 
     <script src="/socket.io/socket.io.js"></script>
