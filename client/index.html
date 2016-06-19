@@ -179,15 +179,18 @@
             
         };
 	document.getElementById("serch_this").onclick = function () {
-            //api_select("btn_a");
-            //api_insert(lng_src, lat_src, lng_dst, lat_dst);
-            api_search_in_radius(function(q) {
-		
-		}
-		,lng_src, lat_src, 0.01);
+        //api_select("btn_a");
+        //api_insert(lng_src, lat_src, lng_dst, lat_dst);
+        search_this(lng_src, lat_src, lng_dst, lat_dst, function(q) {
+            for (var i = 0; i < q.length; i++) {
+                    console.log(q[0].x)
+                    console.log("MAKING MARKER in " + q[i].x +" "+q[i].y) 
+                    DG.marker([q[i].y, q[i].x]).addTo(map);
+                }
+        })
             
         };
-        document.getElementById("to_db").onclick = function () {
+    document.getElementById("to_db").onclick = function () {
             var generator = new IDGenerator();
             //console.log("ID: " + generator.generate());
             //api_select("btn_a");

@@ -1,7 +1,6 @@
- function showAlert() {
-        alert("It works")
-    }
-    
+//var GLOBAL_API = "46.101.113.240:8081"
+var GLOBAL_API = "localhost:8081"
+
 function example_api() 
         {
           var flickerAPI = "https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
@@ -71,7 +70,7 @@ function returnData(data){
 
 function api_select( callback ) {
   var result;
-  var api = "http://46.101.113.240:8081/api/select";
+  var api = "http://" + GLOBAL_API + "/api/select";
   $.getJSON(api)
   .done(function( data ) {
     console.log(JSON.stringify(data));
@@ -79,12 +78,11 @@ function api_select( callback ) {
     console.log("RESULT: " + result[0])
     callback(returnData(result));
   })
-  
 };
 
 function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
   var generator = new IDGenerator;
-  var api = "http://46.101.113.240:8081/api/insert/" + 
+  var api = "http://" + GLOBAL_API + "/api/insert/" + 
             src_lng + "/" + src_lat + "/" + 
             dst_lng + "/" + dst_lat + "/" + 
             generator.generate() ;
@@ -95,30 +93,58 @@ function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
 };
 
 function api_search_in_radius(lng, lat, rad, callback) {
-  var api = "http://46.101.113.240:8081/api/select/" + 
+  var api = "http://" + GLOBAL_API + "/api/select/id/" + 
             lng + "/" + lat + "/" + rad;
   $.getJSON(api)
   .done(function( data ) {
     console.log(data)
+    callback(returnData(data));
   });
+
 };
+
+function api_get_src_from_id(id, callback) {
+    var api = "http://" + GLOBAL_API + "/api/select/src_from_id/" + id;
+    $.getJSON(api)
+    .done(function( data ) {
+        console.log(data)
+        callback(returnData(data));
+  });
+}
 
 function view_markers(type, callback) {
   var stack = [];
   api_select(function (q) {
-    console.log(map)
     for (var i = 0; i < q.length; i++) {
-	if (type == "src"){
-      		console.log(JSON.stringify(q[i].src.x) + " " + JSON.stringify(q[i].src.y))
-      		stack.push([q[i].src.x, q[i].src.y]);
-	}
-	if (type == "dst"){
-		console.log(JSON.stringify(q[i].dst.x) + " " + JSON.stringify(q[i].dst.y))
-                stack.push([q[i].dst.x, q[i].dst.y]);
-	}
+    	if (type == "src"){
+          	console.log(JSON.stringify(q[i].src.x) + " " + JSON.stringify(q[i].src.y))
+          	stack.push([q[i].src.x, q[i].src.y]);
+    	}
+    	if (type == "dst"){
+    		console.log(JSON.stringify(q[i].dst.x) + " " + JSON.stringify(q[i].dst.y))
+            stack.push([q[i].dst.x, q[i].dst.y]);
+    	}
     }
     console.log(stack)
     callback(returnData(stack))
   })
   //console.log("MY MAT: " + mat.select());
+};
+
+function search_this(src_lng, src_lat, dst_lng, dst_lat, callback) {
+    var rad = 0.01;
+    var stack_src = [], stack_dst = [];
+    api_search_in_radius(src_lng, src_lat, rad, function(q) {
+        for (var i = 0; i < q.length; i++) {
+            console.log(q[i].user_id);
+            api_get_src_from_id(q[i].user_id, function(f) {
+                console.log(JSON.stringify(f[0].src))
+                stack_src.push(f[0].src)
+                 console.log(stack_src)
+    callback(returnData(stack_src))
+            })
+        }
+
+    })
+
 };

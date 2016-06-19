@@ -70,13 +70,65 @@ function custom_select1(f){
     });
 };
 
-function custom_select2(f, lng, lat, rad) {
+function custom_select_src(f, lng, lat, rad) {
     var client = new pg.Client(conString);
     client.connect();
     console.log("SELECT with params was called with query");
-    console.log("SELECT src_point FROM order WHERE (src_point <@ circle (("+lng+", "+lat+"),"+rad+");");
-    var func_query = client.query("SELECT src_point FROM order WHERE src_point <@ circle '(("+
+    console.log("SELECT src FROM orders WHERE (src <@ circle (("+lng+", "+lat+"),"+rad+");");
+    var func_query = client.query("SELECT src FROM orders WHERE src <@ circle '(("+
                                     lng+", "+lat+"),"+rad+")';", function(err, result) {
+        console.log("Error: " + err);
+        f(result.rows)
+        client.end();
+    });
+}
+
+function custom_select_dst(f, lng, lat, rad) {
+    var client = new pg.Client(conString);
+    client.connect();
+    console.log("SELECT with params was called with query");
+    console.log("SELECT dst FROM orders WHERE (dst <@ circle (("+lng+", "+lat+"),"+rad+");");
+    var func_query = client.query("SELECT dst FROM orders WHERE dst <@ circle '(("+
+                                    lng+", "+lat+"),"+rad+")';", function(err, result) {
+        console.log("Error: " + err);
+        f(result.rows)
+        client.end();
+    });
+}
+
+function custom_select_id_from_src(f, lng, lat, rad) {
+    var client = new pg.Client(conString);
+    client.connect();
+    console.log("SELECT with params was called with query");
+    console.log("SELECT user_id FROM orders WHERE (src <@ circle (("+lng+", "+lat+"),"+rad+");");
+    var func_query = client.query("SELECT user_id FROM orders WHERE src <@ circle '(("+
+                                    lng+", "+lat+"),"+rad+")';", function(err, result) {
+        console.log("Error: " + err);
+        f(result.rows)
+        client.end();
+    });
+}
+
+function custom_select_dst_from_id(f, id) {
+    var client = new pg.Client(conString);
+    client.connect();
+    console.log("SELECT with params was called with query");
+    console.log("SELECT dst FROM orders WHERE user_id = "+ id+ ";");
+    var func_query = client.query("SELECT dst FROM orders WHERE user_id = "+ id+ ";",
+     function(err, result) {
+        console.log("Error: " + err);
+        f(result.rows)
+        client.end();
+    });
+}
+
+function custom_select_src_from_id(f, id) {
+    var client = new pg.Client(conString);
+    client.connect();
+    console.log("SELECT with params was called with query");
+    console.log("SELECT src FROM orders WHERE user_id = "+ id+ ";");
+    var func_query = client.query("SELECT src FROM orders WHERE user_id = "+ id+ ";",
+     function(err, result) {
         console.log("Error: " + err);
         f(result.rows)
         client.end();
@@ -100,13 +152,47 @@ function respond_select(req, res, next) {
     })
 };
 
-function respond_select_params(req, res, next) {
-    custom_select2((t) => {
+function respond_select_params_src(req, res, next) {
+    custom_select_src((t) => {
         res.setHeader('Access-Control-Allow-Origin','*');
         res.send(t);
         next();
     }, req.params.lat, req.params.lng, req.params.rad);
     console.log(req.params.lng, req.params.lat, req.params.rad);
+};
+
+function respond_select_params_dst(req, res, next) {
+    custom_select_dst((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
+        res.send(t);
+        next();
+    }, req.params.lat, req.params.lng, req.params.rad);
+    console.log(req.params.lng, req.params.lat, req.params.rad);
+};
+
+function respond_select_params_id_from_src(req, res, next) {
+    custom_select_id_from_src((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
+        res.send(t);
+        next();
+    }, req.params.lng, req.params.lat, req.params.rad);
+    console.log(req.params.lng, req.params.lat, req.params.rad);
+};
+
+function respond_select_params_dst_from_id(req, res, next) {
+    custom_select_dst_from_id((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
+        res.send(t);
+        next();
+    }, req.params.id);
+};
+
+function respond_select_params_src_from_id(req, res, next) {
+    custom_select_src_from_id((t) => {
+        res.setHeader('Access-Control-Allow-Origin','*');
+        res.send(t);
+        next();
+    }, req.params.id);
 };
 
 function respond_insert(req,res, next) {
@@ -122,7 +208,11 @@ server_api.get('/hello/:name', respond);
 server_api.head('/hello/:name', respond);
 
 server_api.get('/api/select', respond_select);
-server_api.get('/api/select/:lng/:lat/:rad', respond_select_params);
+server_api.get('/api/select/src/:lng/:lat/:rad', respond_select_params_src);
+server_api.get('/api/select/dst/:lng/:lat/:rad', respond_select_params_dst);
+server_api.get('/api/select/id/:lng/:lat/:rad' , respond_select_params_id_from_src );
+server_api.get('/api/select/dst_from_id/:id'   , respond_select_params_dst_from_id );
+server_api.get('/api/select/src_from_id/:id'   , respond_select_params_src_from_id );
 server_api.get('/api/insert/:src_lng/:src_lat/:dst_lng/:dst_lat/:user_id', respond_insert);
 
 server_api.listen(8081, function() {
