@@ -21,9 +21,10 @@
     <div id="sidebar">
         <ul>
             <li><a>UBERADMIN MENU</a></li>
-            <li><a id="showall">Show all markers</a></li>
+            <li><a id="showall_src">Show all src markers</a></li>
             <li><a id="to_db">Put marker to DB</a></li>
-            <li><a></a></li>
+            <li><a id="showall_dst">Show all dst markers</a></li>
+		<li><a id="serch_this">Serch this</a></li>
         </ul>
     </div>
     <div class="main-content">
@@ -151,17 +152,39 @@
                     alert("Location access denied.");
                 });
         };
-        document.getElementById("showall").onclick = function () {
+        document.getElementById("showall_src").onclick = function () {
             //api_select("btn_a");
             //api_insert(lng_src, lat_src, lng_dst, lat_dst);
             //api_search_in_radius(lng_src, lat_src, 0.01);
             
             var all_markers = []
-            maps_view(DG, map, function(q) {
+            view_markers("src", function(q) {
                 for (var i = 0; i < q.length; i++) {
                     DG.marker([q[i][1], q[i][0]]).addTo(map);
                 }
             });
+            
+        };
+	document.getElementById("showall_dst").onclick = function () {
+            //api_select("btn_a");
+            //api_insert(lng_src, lat_src, lng_dst, lat_dst);
+            //api_search_in_radius(lng_src, lat_src, 0.01);
+            
+            var all_markers = []
+            view_markers("dst", function(q) {
+                for (var i = 0; i < q.length; i++) {
+                    DG.marker([q[i][1], q[i][0]]).addTo(map);
+                }
+            });
+            
+        };
+	document.getElementById("serch_this").onclick = function () {
+            //api_select("btn_a");
+            //api_insert(lng_src, lat_src, lng_dst, lat_dst);
+            api_search_in_radius(function(q) {
+		
+		}
+		,lng_src, lat_src, 0.01);
             
         };
         document.getElementById("to_db").onclick = function () {

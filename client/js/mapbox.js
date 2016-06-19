@@ -71,7 +71,7 @@ function returnData(data){
 
 function api_select( callback ) {
   var result;
-  var api = "https://node-hackerman.c9users.io:8081/api/select";
+  var api = "http://46.101.113.240:8081/api/select";
   $.getJSON(api)
   .done(function( data ) {
     console.log(JSON.stringify(data));
@@ -84,7 +84,7 @@ function api_select( callback ) {
 
 function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
   var generator = new IDGenerator;
-  var api = "https://node-hackerman.c9users.io:8081/api/insert/" + 
+  var api = "http://46.101.113.240:8081/api/insert/" + 
             src_lng + "/" + src_lat + "/" + 
             dst_lng + "/" + dst_lat + "/" + 
             generator.generate() ;
@@ -94,8 +94,8 @@ function api_insert(src_lng, src_lat, dst_lng, dst_lat) {
   })
 };
 
-function api_search_in_radius(lng, lat, rad) {
-  var api = "https://node-hackerman.c9users.io:8081/api/select/" + 
+function api_search_in_radius(lng, lat, rad, callback) {
+  var api = "http://46.101.113.240:8081/api/select/" + 
             lng + "/" + lat + "/" + rad;
   $.getJSON(api)
   .done(function( data ) {
@@ -103,13 +103,19 @@ function api_search_in_radius(lng, lat, rad) {
   });
 };
 
-function maps_view(DG, map, callback) {
+function view_markers(type, callback) {
   var stack = [];
   api_select(function (q) {
     console.log(map)
     for (var i = 0; i < q.length; i++) {
-      console.log(JSON.stringify(q[i].src.x) + " " + JSON.stringify(q[i].src.y))
-      stack.push([q[i].src.x, q[i].src.y]);
+	if (type == "src"){
+      		console.log(JSON.stringify(q[i].src.x) + " " + JSON.stringify(q[i].src.y))
+      		stack.push([q[i].src.x, q[i].src.y]);
+	}
+	if (type == "dst"){
+		console.log(JSON.stringify(q[i].dst.x) + " " + JSON.stringify(q[i].dst.y))
+                stack.push([q[i].dst.x, q[i].dst.y]);
+	}
     }
     console.log(stack)
     callback(returnData(stack))
