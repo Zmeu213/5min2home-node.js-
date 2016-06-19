@@ -3,9 +3,11 @@
     <title>5 Min 2 Home - find new place in city</title>
  
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/slide_menu.css">
 
     <script type="text/javascript" src="/js/mapbox.js"></script>
     <script type="text/javascript" src="/js/pg.js"></script>
+    
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
 
@@ -13,81 +15,89 @@
 
 <body>
 
-<div id='map'></div>
+
+
+<div class="container">
+    <div id="sidebar">
+        <ul>
+            <li><a>UBERADMIN MENU</a></li>
+            <li><a id="showall">Show all markers</a></li>
+            <li><a id="to_db">Put marker to DB</a></li>
+            <li><a></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="swipe-area"></div>
+        <div id='map'></div>
+
+        <input id='search' class='search-ui' placeholder='Enter state code' style="display: none;" />
+
+        <div class="form1_out">
+            <a id="geolocate" class="ui-button" style="
+            position: absolute;
+            left: 30px;
+            top: 38px;
+            box-shadow: 1px 1px 2px black;
+            border: 0;
+            border-radius: 60px;
+            background: #FF8686;
+            display: table;
+            text-decoration: none;
+            width: 40px;
+            padding: 11px 0px 6px 1px;
+            "><img src="http://www.libraires-rhonealpes.fr/templates/lira-v1/img/customMarker.png" height="20" data-pin-nopin="true"></a>
+            <form action="" method="POST" class="form1">
+                <div>
+                <div style="
+            background: #4CAF50;
+            border: 0;
+            padding: 10px 15px;    
+            color: white;float: 
+            left;">Откуда:</div>
+                <input type="text" name="from1" class="from1" id="from_field" placeholder="Ваш адрес"/>
+                <label><input type="checkbox" name="komnata" /><span>Комната</span></label>
+                <label><input type="checkbox" name="komnata1" /><span>1</span></label>
+                <label><input type="checkbox" name="komnata2" /><span>2</span></label>
+                <label><input type="checkbox" name="komnata3" /><span>3</span></label>
+                <label><input type="checkbox" name="komnata4" /><span>4+</span></label>
+                <input type="text" name="to1" placeholder="Ваша текущая арендная плата" />
+                <div style="clear: both;"></div>
+                </div>
+                <div style="margin: 10px 0 0;">
+                <div style="
+            background: #8686FF;
+            border: 0;
+            padding: 10px 22px;    
+            color: white;
+            float: left;">Куда:</div>
+                <input type="text" name="from1" class="from1" id="to_field" placeholder="Желаемый адрес" />
+                <label><input type="checkbox" name="komnata" /><span>Комната</span></label>
+                <label><input type="checkbox" name="komnata1" /><span>1</span></label>
+                <label><input type="checkbox" name="komnata2" /><span>2</span></label>
+                <label><input type="checkbox" name="komnata3" /><span>3</span></label>
+                <label><input type="checkbox" name="komnata4" /><span>4+</span></label>
+                <input type="text" name="to1" placeholder="Ваша желаемая арендная плата" />
+                </div>
+                <input type="submit" id="big_button" value="Переехать" style="float: right;
+            margin: 10px 0 0;
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 1px 1px 2px black;
+            border-radius: 60px;
+            border: 0;
+            background: #8686FF;" />
+            </form> 
+
+            <a href="#" data-toggle=".container" id="sidebar-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </a>
+    </div>
+</div>
     
-<input id='search' class='search-ui' placeholder='Enter state code' style="display: none;" />
 
-<div class="form1_out">
-    <a id="geolocate" class="ui-button" style="
-    position: absolute;
-    left: 30px;
-    top: 38px;
-    box-shadow: 1px 1px 2px black;
-    border: 0;
-    border-radius: 60px;
-    background: #FF8686;
-    display: table;
-    text-decoration: none;
-    width: 40px;
-    padding: 11px 0px 6px 1px;
-    "><img src="http://www.libraires-rhonealpes.fr/templates/lira-v1/img/customMarker.png" height="20" data-pin-nopin="true"></a>
-	<form action="" method="POST" class="form1">
-	    <div>
-		<div style="
-    background: #4CAF50;
-    border: 0;
-    padding: 10px 15px;    
-    color: white;float: 
-    left;">Откуда:</div>
-		<input type="text" name="from1" class="from1" id="from_field" placeholder="Ваш адрес"/>
-		<label><input type="checkbox" name="komnata" /><span>Комната</span></label>
-		<label><input type="checkbox" name="komnata1" /><span>1</span></label>
-		<label><input type="checkbox" name="komnata2" /><span>2</span></label>
-		<label><input type="checkbox" name="komnata3" /><span>3</span></label>
-		<label><input type="checkbox" name="komnata4" /><span>4+</span></label>
-		<input type="text" name="to1" placeholder="Ваша текущая арендная плата" />
-		<div style="clear: both;"></div>
-		</div>
-	    <div style="margin: 10px 0 0;">
-		<div style="
-    background: #8686FF;
-    border: 0;
-    padding: 10px 22px;    
-    color: white;
-    float: left;">Куда:</div>
-		<input type="text" name="from1" class="from1" id="to_field" placeholder="Желаемый адрес" />
-		<label><input type="checkbox" name="komnata" /><span>Комната</span></label>
-		<label><input type="checkbox" name="komnata1" /><span>1</span></label>
-		<label><input type="checkbox" name="komnata2" /><span>2</span></label>
-		<label><input type="checkbox" name="komnata3" /><span>3</span></label>
-		<label><input type="checkbox" name="komnata4" /><span>4+</span></label>
-		<input type="text" name="to1" placeholder="Ваша желаемая арендная плата" />
-		</div>
-		<input type="submit" id="big_button" value="Переехать" style="float: right;
-    margin: 10px 0 0;
-    padding: 10px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 1px 1px 2px black;
-    border-radius: 60px;
-    border: 0;
-    background: #8686FF;" />
-	</form>
-	
-	
-</div>
-
-<div style="
-    position: absolute;
-    left: 5px;
-    top: 100px;
-    display: table;
-    background: lightseagreen;
-    width: 40px;
-    padding: 11px 0px 6px 1px;
-    " id="btn_a">
-    <p>Text</p>
-</div>
 
 <script>
 
@@ -101,8 +111,8 @@
         
     DG.then(function() {
 
-        var icon_src = DG.icon ({ iconUrl: '/img/home-from.png' }),
-            icon_dst = DG.icon ({ iconUrl: '/img/home-to.png' });
+        var icon_src = DG.icon ({ iconUrl: '/img/home-from.png', iconAnchor: [16, 37] }),
+            icon_dst = DG.icon ({ iconUrl: '/img/home-to.png'  , iconAnchor: [16, 37] });
 
         map = DG.map('map', {
             center: [55.75194599890442, 37.62044906616212],
@@ -141,9 +151,7 @@
                     alert("Location access denied.");
                 });
         };
-        document.getElementById("btn_a").onclick = function () {
-            var generator = new IDGenerator();
-            //console.log("ID: " + generator.generate());
+        document.getElementById("showall").onclick = function () {
             //api_select("btn_a");
             //api_insert(lng_src, lat_src, lng_dst, lat_dst);
             //api_search_in_radius(lng_src, lat_src, 0.01);
@@ -156,6 +164,13 @@
             });
             
         };
+        document.getElementById("to_db").onclick = function () {
+            var generator = new IDGenerator();
+            //console.log("ID: " + generator.generate());
+            //api_select("btn_a");
+            api_insert(lng_src, lat_src, lng_dst, lat_dst);
+            //api_search_in_radius(lng_src, lat_src, 0.01);
+        };
         
     });    
     
@@ -165,6 +180,8 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
+
+    <script type="text/javascript" src="/js/slide_menu.js"></script>
 
 </body>
 
