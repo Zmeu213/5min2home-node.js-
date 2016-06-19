@@ -21,15 +21,16 @@
     <a id="geolocate" class="ui-button" style="
     position: absolute;
     left: 30px;
-    top: 38px;
-    box-shadow: 1px 1px 2px black;
+    top: 40px;
     border: 0;
     border-radius: 60px;
     background: #FF8686;
     display: table;
     text-decoration: none;
-    width: 40px;
-    padding: 11px 0px 6px 1px;
+    width: 35px;
+    height: 35px;
+    box-sizing: border-box;
+    padding: 7px;
     "><img src="http://www.libraires-rhonealpes.fr/templates/lira-v1/img/customMarker.png" height="20" data-pin-nopin="true"></a>
 	<form action="" method="POST" class="form1">
 	    <div>
@@ -39,13 +40,13 @@
     padding: 10px 15px;    
     color: white;float: 
     left;">Откуда:</div>
-		<input type="text" name="from1" class="from1" id="from_field" placeholder="Ваш адрес"/>
+		<input type="text" name="from1" class="from1 bln brn" id="from_field" placeholder="Ваш адрес"/>
 		<label><input type="checkbox" name="komnata" /><span>Комната</span></label>
 		<label><input type="checkbox" name="komnata1" /><span>1</span></label>
 		<label><input type="checkbox" name="komnata2" /><span>2</span></label>
 		<label><input type="checkbox" name="komnata3" /><span>3</span></label>
 		<label><input type="checkbox" name="komnata4" /><span>4+</span></label>
-		<input type="text" name="to1" placeholder="Ваша текущая арендная плата" />
+		<input type="text" name="to1" placeholder="Ваша текущая арендная плата" class="bln"/>
 		<div style="clear: both;"></div>
 		</div>
 	    <div style="margin: 10px 0 0;">
@@ -55,38 +56,25 @@
     padding: 10px 22px;    
     color: white;
     float: left;">Куда:</div>
-		<input type="text" name="from1" class="from1" id="to_field" placeholder="Желаемый адрес" />
+		<input type="text" name="from1" class="from1 bln brn" id="to_field" placeholder="Желаемый адрес" />
 		<label><input type="checkbox" name="komnata" /><span>Комната</span></label>
 		<label><input type="checkbox" name="komnata1" /><span>1</span></label>
 		<label><input type="checkbox" name="komnata2" /><span>2</span></label>
 		<label><input type="checkbox" name="komnata3" /><span>3</span></label>
 		<label><input type="checkbox" name="komnata4" /><span>4+</span></label>
-		<input type="text" name="to1" placeholder="Ваша желаемая арендная плата" />
+		<input type="text" name="to1" placeholder="Ваша желаемая арендная плата" class="bln"/>
 		</div>
 		<input type="submit" id="big_button" value="Переехать" style="float: right;
     margin: 10px 0 0;
     padding: 10px;
     color: white;
     cursor: pointer;
-    box-shadow: 1px 1px 2px black;
     border-radius: 60px;
     border: 0;
     background: #8686FF;" />
 	</form>
 	
 	
-</div>
-
-<div style="
-    position: absolute;
-    left: 5px;
-    top: 100px;
-    display: table;
-    background: lightseagreen;
-    width: 40px;
-    padding: 11px 0px 6px 1px;
-    " id="btn_a">
-    <p>Text</p>
 </div>
 
 <script>

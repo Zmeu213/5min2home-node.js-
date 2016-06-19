@@ -6,45 +6,44 @@
  }
   #map { position:absolute; top:0; bottom:0; width:100%; }
   .form1_out {
-	      position: relative;
+        position: relative;
     display: table;
     margin: auto;
     padding: 20px 0 0;
   }
   .form1 label {
-	position: relative;
-	    display: block;
+  position: relative;
+      display: block;
     float: left;
   }
   .form1 label:hover {
-	cursor: pointer;
+  cursor: pointer;
   }
   .form1 label input {
-	position: absolute;
+  position: absolute;
   }
   .form1 label span {
-	position: relative;
-	    float: left;
+  position: relative;
+      float: left;
     background: black;
     color: white;
     padding: 10px 15px;
   }
   #cat {display: none;}
   * {
-	  outline: none;
+    outline: none;
   }
   .form1 label .active {
-	  background: lightseagreen;
+    background: lightseagreen;
   }
   .form1 input[type="text"] {
-	      float: left;
-	      padding: 9px;
+        float: left;
+        padding: 10px;
     position: relative;
     width: 189px;
-    border: 1px solid black;
+    border: 1px solid #ccc;
   }
-  .form1 .from1 {
-	  border-width: 1px 0 1px 1px !important;
+  .form1 .from1 { border-width:1px 0 1px 0px !important;
   }
   .search-ui {
   position:absolute;
@@ -75,3 +74,10 @@
   .ui-to-bok {
     top: 20%; left: 10%; 
   }
+
+.bln {
+  border-left-width: 0 !important;
+}
+.brn {
+  border-right-width: 0 !important;
+}
